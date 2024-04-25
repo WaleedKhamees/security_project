@@ -1,6 +1,8 @@
 import math
 from sympy import isprime, primitive_root
 from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
+import base64
 
 
 def read_Public_Parameters(File_Path):
@@ -34,27 +36,45 @@ def get_primitive_root(prime: int) -> int:
     return primitive_root(prime)
 
 
-def pad_to_n_bits(number, bits):
-    binary_str = bin(number)[2:]
+def pad(byte_array:bytearray):
+    block_size = 256
+    pad_len = block_size - len(byte_array) % block_size
+    return byte_array + (bytes([pad_len]) * pad_len)
 
-    padding_length = bits - len(binary_str)
+def unpad(byte_array:bytearray):
+    return byte_array[:-ord(byte_array[-1:])]
 
-    padded_binary_str = '0' * padding_length + binary_str
+def encrypt(message:str, key)->str:
+        byte_array = message.encode("UTF-8")
+        padded = pad(byte_array)
+        cipher = AES.new(key, AES.MODE_ECB)
+        encrypted = cipher.encrypt(padded)
+        return base64.b64encode(encrypted).decode('utf-8')
 
-    return int(padded_binary_str, 2)
+def decrypt(message:str, key)->str:
+    byte_array = base64.b64decode(message)
+    cipher = AES.new(key, AES.MODE_ECB)
+    decrypted = cipher.decrypt(byte_array)
+    unpadded = unpad(decrypted)
+    return unpadded.decode('utf-8')
 
+        
 
 def Send_Message(client, key):
     while True:
         message = input("> ")
-        aes = AES.new(key, AES.MODE_CBC)
-        ciphertext = aes.encrypt(message)
-        client.send(ciphertext.encode())
-
+        if len(message) == 0:
+            continue
+        encrypted_message = encrypt(message, key)
+        client.send(encrypted_message.encode())
+        client.recv(512)  
 
 def Receive_Message(client, key):
     while True:
         cipher = client.recv(512)
-        cipher = cipher.decode()
-        aes = AES.new(key, AES.MODE_CBC)
-        print(f"> {aes.decrypt(cipher)}")
+        client.send("ACK".encode()) 
+
+        decrypted_message = decrypt(cipher, key)
+        print(f"\n# {decrypted_message}")
+        print("> ", end="")
+
