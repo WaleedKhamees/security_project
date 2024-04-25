@@ -15,6 +15,6 @@ def generate_keys():
 
     s1, s2  = elgamal_sign(diffie_hellman_Ya, elgamal_Xa, elgamal_q, elgamal_a)
 
-    return diffie_hellman_Xa, diffie_hellman_Ya, elgamal_Xa, elgamal_Ya, elgamal_q, elgamal_a, s1, s2
+    return diffie_hellman_Xa, diffie_hellman_Ya, diffie_hellman_q , elgamal_Xa, elgamal_Ya, elgamal_q, elgamal_a, s1, s2
 
 

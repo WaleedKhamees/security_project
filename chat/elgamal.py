@@ -24,7 +24,7 @@ def elgamal_sign(message: int, Xa: int, q: int, a: int) -> tuple:
     m = SHA1.new(large_number_to_bytes(message)).digest()
     m = int.from_bytes(m)
 
-    i = (m - Xa * s1);
+    i = (m - Xa * s1)
     j = pow(k, -1, q - 1)
     k = q - 1
 
