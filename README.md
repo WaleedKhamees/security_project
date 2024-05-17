@@ -83,11 +83,6 @@ plt.show()
 ```
 <center> code for displaying English and cipher text letter frequency </center>
 
-| Cipher character frequency               | English character frequency          |
-| ---------------------------------------- | ------------------------------------ |
-| ![[Pasted image 20240506071548.png]]<br> | ![[Pasted image 20240506071738.png]] |
-
-
 <div style="page-break-after: always;"></div>
 
 ## 2. Packet Analysis
@@ -125,7 +120,6 @@ print(CaesarCipher("Gur synt vf cvpbPGS{c33xno00_1_f33_h_qrnqorrs}", 13, False).
 We xored the two images and raised the gamma of the resulting image which produced this key `picoCTF{d72ea4af}`
 after a while We discovered that adding the two images produce the same effect. 
 
-![[Pasted image 20240506061212.png]]
 ```python 
 image1 = cv2.imread('first.png')
 image2 = cv2.imread('second.png')

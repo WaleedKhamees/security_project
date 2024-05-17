@@ -61,20 +61,40 @@ def decrypt(message:str, key)->str:
         
 
 def Send_Message(client, key):
+
     while True:
-        message = input("> ")
+        try: 
+            message = input("> ")
+        except Exception as e: 
+            pass
+        if client._closed:
+            print("user disconnected")
+            break
+
         if len(message) == 0:
             continue
         encrypted_message = encrypt(message, key)
         client.send(encrypted_message.encode())
-        client.recv(512)  
+        print("user disconnected")
+        if message == "exit":
+            print("exiting")
+            client.close()
+            exit(0)
 
 def Receive_Message(client, key):
     while True:
         cipher = client.recv(512)
-        client.send("ACK".encode()) 
+        # client.send("ACK".encode()) 
 
-        decrypted_message = decrypt(cipher, key)
-        print(f"\n# {decrypted_message}")
-        print("> ", end="")
+        try:
+            decrypted_message = decrypt(cipher, key)
+        except TypeError:
+            print("user disconnected")
+            break; 
+        if decrypted_message == "exit":
+            print("exiting")
+            client.close()
+            exit(0)
+        
+        print(f"\n# {decrypted_message}\n>")
 

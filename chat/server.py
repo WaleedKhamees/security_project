@@ -11,7 +11,7 @@ IP = "localhost"
 PORT = 1234
 
 
-
+print("Server is running, Waiting for connection...")
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((IP, PORT))
 server.listen()
